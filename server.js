@@ -102,24 +102,34 @@ function start() {
           name: 'salary',
         },
         {
-          type: 'input',
+          type: 'list',
           message: 'What department is the role for?',
           name: 'rolesdepartment',
+          choices: allthedepartments,
         }
 
       ])
       .then(function (response) {
-        console.log(response);
-        console.log(response.rolename);
-        db.query(`INSERT INTO roles(id, title, department, salary) VALUES(5,'${response.rolename}','${response.rolesdepartment}','${response.salary}')`, (err, result) => {
+        // console.log(response);
+        // console.log(response.rolesdepartment);
+        db.query( `SELECT * FROM department`,function (err, result) {
+          console.log(result[0].id);
+          console.table(result)
+          for (let i = 0;i<result.length;i++){
+            if(response.rolesdepartment === result[i].department_name){
+              // console.log(result.id);
+        db.query(`INSERT INTO roles(title, department, salary) VALUES('${response.rolename}','${result[i].id}','${response.salary}')`, (err, result) => {
           if (err) {
-            console.log(err);
+            // console.log(err);
           } else {
-            allRoles.push(response)
-            console.log(allRoles);
+            console.log("good");
           }
         })
-
+           } else {
+            // console.log("no");
+           }
+          }
+})
         questions();
       })
 
@@ -153,17 +163,23 @@ function start() {
       .then(function (response) {
         console.log(response);
         console.log(response.firstname);
-        db.query(`INSERT INTO roles(firstname, lastname, employeesrole, employeesmanager) VALUES(5,'${response.firstname}','${response.lastname}','${response.employeesmanager}')`, (err, result) => {
+        db.query( `SELECT * FROM roles`,function (err, result) {
+          console.log(result[0].id);
+          console.table(result)
+          for (let i = 0;i<result.length;i++){
+            if(response.employeesrole === result[i].title){
+        db.query(`INSERT INTO employee(first_name, last_name, manager, roles) VALUES('${response.firstname}','${response.lastname}','${response.employeesmanager}','${result[i].id}')`, (err, result) => {
           if (err) {
             console.log(err);
           }
+        })}}
         })
         questions();
       })
 
   }
   function viewallemployees() {
-    db.query('SELECT employee.id,employee.first_name,employee.last_name,roles.title,department.department_name,roles.salary,manager_id FROM employee JOIN roles ON employee.roles = roles.id LEFT JOIN department ON roles.department = department.id;', function (err, results) {
+    db.query('SELECT employee.id,employee.first_name,employee.last_name,roles.title,department.department_name,roles.salary,manager FROM employee JOIN roles ON employee.roles = roles.id LEFT JOIN department ON roles.department = department.id;', function (err, results) {
       console.table(['Table'],results)})
       questions();
   }
@@ -180,9 +196,14 @@ function start() {
 
     questions();
   }
+  let allthedepartments = []
   function viewalldepartments() {
     db.query('SELECT * FROM department', function (err, results) {
       console.table(['id', 'department_name'], results);
+      for (let i = 0; i < results.length; i++) {
+        allthedepartments.push(results[i].department_name)
+      }
+      console.log(allthedepartments);
 
     });
     questions();
@@ -190,5 +211,37 @@ function start() {
   function Quit() {
 
   }
+  function updateemployee(){
+    inquirer
+    .prompt([
+      {
+        type: 'input',
+        message: 'Which employee do you want to update?',
+        name: 'updateemployee',
+      }
+
+    ])
+    .then(function (response) {
+      console.log(response);
+      console.log(response.updateemployee);
+      db.query(`Select employee.id,employee.first_name FROM employee` , function (err, results) {
+        for(let i = 0; i<results.length;i++){
+          if (response.updateemployee === results[i].first_name){
+             db.query(`DELETE FROM employee WHERE id = ?`, results[i].id, (err, result) => {
+      if (err) {
+        console.log(err);
+      }
+      console.log(result);
+    });
+          }
+   
+        }
+        
+  })
+  questions();
+})
+
+  }
+  
 }
 start();
