@@ -51,7 +51,7 @@ function start() {
           viewallroles();
         } else if (response.select === "View All Departments") {
           viewalldepartments();
-        } else if (response.select === "Update Employee") {
+        } else if (response.select === "Delete Employee") {
           updateemployee();
         } else if (response.select === "Quit") {
           Quit();
@@ -72,14 +72,14 @@ function start() {
 
       ])
       .then(function (response) {
-        console.log(response);
-        console.log(response.departmentname);
+        // console.log(response);
+        // console.log(response.departmentname);
         db.query(`INSERT INTO department( department_name) VALUES('${response.departmentname}')`, (err, result) => {
           if (err) {
             console.log(err);
           }
           db.query('SELECT * FROM department', function (err, results) {
-            console.log(results);
+            // console.log(results);
           });
 
         });
@@ -113,8 +113,8 @@ function start() {
         // console.log(response);
         // console.log(response.rolesdepartment);
         db.query( `SELECT * FROM department`,function (err, result) {
-          console.log(result[0].id);
-          console.table(result)
+          // console.log(result[0].id);
+          // console.table(result)
           for (let i = 0;i<result.length;i++){
             if(response.rolesdepartment === result[i].department_name){
               // console.log(result.id);
@@ -122,7 +122,7 @@ function start() {
           if (err) {
             // console.log(err);
           } else {
-            console.log("good");
+           
           }
         })
            } else {
@@ -161,11 +161,11 @@ function start() {
 
       ])
       .then(function (response) {
-        console.log(response);
-        console.log(response.firstname);
+        // console.log(response);
+        // console.log(response.firstname);
         db.query( `SELECT * FROM roles`,function (err, result) {
-          console.log(result[0].id);
-          console.table(result)
+          // console.log(result[0].id);
+          // console.table(result)
           for (let i = 0;i<result.length;i++){
             if(response.employeesrole === result[i].title){
         db.query(`INSERT INTO employee(first_name, last_name, manager, roles) VALUES('${response.firstname}','${response.lastname}','${response.employeesmanager}','${result[i].id}')`, (err, result) => {
@@ -191,7 +191,7 @@ function start() {
       for (let i = 0; i < results.length; i++) {
         alltheroles.push(results[i].title)
       }
-      console.log(alltheroles);
+      // console.log(alltheroles);
     })
 
     questions();
@@ -203,7 +203,7 @@ function start() {
       for (let i = 0; i < results.length; i++) {
         allthedepartments.push(results[i].department_name)
       }
-      console.log(allthedepartments);
+      // console.log(allthedepartments);
 
     });
     questions();
@@ -222,8 +222,8 @@ function start() {
 
     ])
     .then(function (response) {
-      console.log(response);
-      console.log(response.updateemployee);
+      // console.log(response);
+      // console.log(response.updateemployee);
       db.query(`Select employee.id,employee.first_name FROM employee` , function (err, results) {
         for(let i = 0; i<results.length;i++){
           if (response.updateemployee === results[i].first_name){
@@ -231,7 +231,7 @@ function start() {
       if (err) {
         console.log(err);
       }
-      console.log(result);
+      // console.log(result);
     });
           }
    
