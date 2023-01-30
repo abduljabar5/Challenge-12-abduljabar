@@ -34,7 +34,7 @@ function start() {
           type: "list",
           message: "What would you like to do?",
           name: "select",
-          choices: ["View All Employees", "Add Employee", "Update Employee", "View All Roles", "Add Role", "View All Departments", "Add Department", "Quit"]
+          choices: ["View All Employees", "Add Employee", "Delete Employee", "View All Roles", "Add Role", "View All Departments", "Add Department", "Quit"]
         }])
       .then(function (response) {
         console.log(response);
